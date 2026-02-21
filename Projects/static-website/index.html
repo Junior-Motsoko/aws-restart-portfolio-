@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FreshlyGround Café</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:    #0d0d0d;
+      --charcoal: #1f1f1f;
+      --dark:     #2a2a2a;
+      --green:    #3a7d44;
+      --green-mid:#4e9a5a;
+      --green-lt: #6bb876;
+      --mint:     #e8f5eb;
+      --sage:     #c8e6cd;
+      --white:    #ffffff;
+      --off-white:#f7faf8;
+      --gray:     #6b7280;
+      --light-gray:#e5e7eb;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 200;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--light-gray);
+      display: flex; align-items: center; justify-content: space-between; padding: 1rem 3rem;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600; color: var(--black); letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--charcoal); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--green); }
+    .cart-btn {
+      background: var(--green); color: var(--white); border: none;
+      padding: 0.55rem 1.3rem; font-family: 'Inter', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-weight: 500;
+      display: flex; align-items: center; gap: 0.5rem; transition: background 0.3s; border-radius: 2px;
+    }
+    .cart-btn:hover { background: var(--green-mid); }
+    .cart-count {
+      background: var(--white); color: var(--green); border-radius: 50%;
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh; min-height: 600px;
+      background: var(--off-white);
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; overflow: hidden; padding-top: 70px;
+    }
+    .hero-left { padding: 4rem 3rem 4rem 6rem; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--mint); color: var(--green); padding: 0.35rem 0.9rem;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      border-radius: 2px; margin-bottom: 1.5rem;
+    }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 5.5rem); line-height: 1.05;
+      color: var(--black); font-weight: 600; margin-bottom: 1.2rem;
+    }
+    .hero h1 em { color: var(--green); font-style: italic; }
+    .hero p {
+      font-size: 1rem; color: var(--gray); line-height: 1.75;
+      max-width: 420px; margin-bottom: 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--green); color: var(--white);
+      padding: 0.85rem 2rem; text-decoration: none; border-radius: 2px;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+      transition: background 0.3s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--green-mid); }
+    .btn-outline {
+      background: transparent; color: var(--black);
+      padding: 0.85rem 2rem; text-decoration: none; border-radius: 2px;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+      border: 1.5px solid var(--light-gray); transition: all 0.3s; cursor: pointer;
+    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .hero-right {
+      height: 100%; background: var(--mint);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-right::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 60% 40%, var(--sage) 0%, var(--mint) 60%);
+    }
+    .hero-emoji {
+      font-size: 10rem; position: relative; z-index: 1;
+      animation: float 4s ease-in-out infinite;
+    }
+    .hero-badge {
+      position: absolute; bottom: 2.5rem; left: 2rem; z-index: 2;
+      background: var(--white); padding: 0.8rem 1.2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 4px;
+    }
+    .hero-badge .num { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600; color: var(--green); line-height: 1; }
+    .hero-badge .lbl { font-size: 0.72rem; color: var(--gray); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.2rem; }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-16px) rotate(2deg)} }
+
+    /* ── SHARED ── */
+    section { padding: 6rem 2rem; }
+    .section-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); font-weight: 600; margin-bottom: 0.6rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 1.2rem; font-weight: 600; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ── ABOUT ── */
+    .about { background: var(--white); border-top: 1px solid var(--light-gray); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .about-text p { font-size: 1rem; line-height: 1.8; color: var(--gray); margin-bottom: 1rem; }
+    .about-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-card { background: var(--off-white); border: 1px solid var(--light-gray); padding: 1.8rem 1.5rem; border-radius: 4px; }
+    .stat-card .number { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--green); line-height: 1; font-weight: 600; }
+    .stat-card .label { font-size: 0.75rem; color: var(--gray); margin-top: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .stat-card:first-child { grid-column: span 2; background: var(--mint); border-color: var(--sage); }
+
+    /* ── MENU ── */
+    .menu { background: var(--off-white); }
+    .menu-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .menu-item {
+      background: var(--white); border: 1px solid var(--light-gray);
+      padding: 2rem; position: relative; border-radius: 4px;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .menu-item:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(58,125,68,0.1); border-color: var(--sage); }
+    .menu-item .icon { font-size: 2rem; margin-bottom: 1rem; }
+    .menu-item h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; margin-bottom: 0.4rem; font-weight: 600; }
+    .menu-item .desc { font-size: 0.88rem; color: var(--gray); line-height: 1.65; margin-bottom: 1rem; }
+    .menu-item .price { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--green); position: absolute; top: 1.8rem; right: 1.8rem; font-weight: 600; }
+    .menu-tag { display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.6rem; background: var(--mint); color: var(--green); border-radius: 2px; font-weight: 600; }
+    .add-to-cart {
+      display: block; width: 100%; margin-top: 1.2rem;
+      background: transparent; border: 1.5px solid var(--light-gray); color: var(--black);
+      padding: 0.6rem; font-family: 'Inter', sans-serif; font-size: 0.78rem;
+      letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+      transition: all 0.3s; border-radius: 2px; font-weight: 500;
+    }
+    .add-to-cart:hover { background: var(--green); border-color: var(--green); color: var(--white); }
+    .add-to-cart.added { background: #2d6e38; border-color: #2d6e38; color: white; }
+
+    /* ── GALLERY ── */
+    .gallery { background: var(--black); }
+    .gallery .section-label { color: var(--green-lt); }
+    .gallery .section-title { color: var(--white); }
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      grid-template-rows: 220px 220px; gap: 0.6rem; margin-top: 2.5rem;
+    }
+    .gallery-item { overflow: hidden; cursor: pointer; position: relative; border-radius: 4px; }
+    .gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
+    .gallery-thumb {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; transition: transform 0.4s;
+      background: linear-gradient(135deg, var(--charcoal), #1a3d1f); position: relative;
+    }
+    .gallery-item:first-child .gallery-thumb { font-size: 7rem; }
+    .gallery-thumb::after {
+      content: attr(data-caption); position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 0.8rem 1rem; font-size: 0.78rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: var(--white); letter-spacing: 0.04em;
+    }
+    .gallery-item:hover .gallery-thumb { transform: scale(1.06); }
+    .gallery-item .overlay { position: absolute; inset: 0; background: rgba(58,125,68,0.2); opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; }
+    .gallery-item:hover .overlay { opacity: 1; }
+    .overlay span { color: white; font-size: 1.5rem; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.94); align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox-content { max-width: 500px; text-align: center; padding: 2rem; }
+    .lightbox-emoji { font-size: 8rem; margin-bottom: 1rem; }
+    .lightbox-caption { color: #ccc; font-size: 1rem; line-height: 1.6; }
+    .lightbox-close { position: absolute; top: 2rem; right: 2rem; color: #aaa; font-size: 2rem; cursor: pointer; background: none; border: none; transition: color 0.3s; }
+    .lightbox-close:hover { color: var(--green-lt); }
+
+    /* ── REVIEWS ── */
+    .reviews { background: var(--white); }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .review-card { background: var(--off-white); padding: 2rem; border: 1px solid var(--light-gray); border-top: 3px solid var(--green); border-radius: 4px; transition: transform 0.3s; }
+    .review-card:hover { transform: translateY(-3px); }
+    .stars { color: var(--green); font-size: 0.95rem; margin-bottom: 0.8rem; letter-spacing: 0.05em; }
+    .review-text { font-size: 0.92rem; line-height: 1.75; color: var(--gray); margin-bottom: 1.2rem; font-style: italic; }
+    .reviewer { display: flex; align-items: center; gap: 0.8rem; }
+    .reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--mint); border: 2px solid var(--sage); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .reviewer-name { font-size: 0.85rem; font-weight: 600; color: var(--black); }
+    .reviewer-date { font-size: 0.72rem; color: var(--gray); margin-top: 0.1rem; }
+    .reviews-summary { display: flex; align-items: center; gap: 3rem; background: var(--mint); border: 1px solid var(--sage); padding: 2rem 2.5rem; margin-top: 2.5rem; border-radius: 4px; flex-wrap: wrap; }
+    .summary-score { text-align: center; }
+    .summary-score .big { font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--green); line-height: 1; font-weight: 600; }
+    .summary-score .stars { margin: 0.3rem 0; }
+    .summary-score p { color: var(--gray); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .summary-bars { flex: 1; min-width: 200px; }
+    .bar-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; font-size: 0.78rem; color: var(--gray); }
+    .bar-track { flex: 1; height: 6px; background: var(--sage); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--green); border-radius: 3px; }
+
+    /* ── MAP ── */
+    .map-section { background: var(--off-white); padding: 0; border-top: 1px solid var(--light-gray); }
+    .map-wrapper { display: grid; grid-template-columns: 1fr 1.6fr; min-height: 420px; }
+    .map-info { background: var(--white); padding: 4rem 3rem; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--light-gray); }
+    .map-info .section-title { font-size: 2rem; margin-bottom: 2rem; }
+    .hours-list { list-style: none; }
+    .hours-list li { display: flex; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid var(--light-gray); font-size: 0.88rem; }
+    .hours-list li span:first-child { color: var(--gray); }
+    .hours-list li span:last-child { color: var(--black); font-weight: 500; }
+    .hours-list li.today { background: var(--mint); padding-left: 0.6rem; padding-right: 0.6rem; border-radius: 3px; }
+    .hours-list li.today span { color: var(--green); font-weight: 600; }
+    .map-embed { position: relative; overflow: hidden; }
+    .map-embed iframe { width: 100%; height: 100%; border: none; min-height: 420px; }
+    .map-overlay-badge { position: absolute; bottom: 1.5rem; left: 1.5rem; background: var(--white); border: 1px solid var(--light-gray); padding: 0.6rem 1rem; font-size: 0.78rem; display: flex; align-items: center; gap: 0.5rem; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); color: var(--green); font-weight: 500; }
+
+    /* ── CART SIDEBAR ── */
+    .cart-sidebar { position: fixed; top: 0; right: -420px; width: 400px; height: 100vh; background: var(--white); z-index: 300; box-shadow: -4px 0 30px rgba(0,0,0,0.1); transition: right 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
+    .cart-sidebar.open { right: 0; }
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 299; display: none; }
+    .cart-overlay.open { display: block; }
+    .cart-header { background: var(--green); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .cart-header h3 { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 1.3rem; font-weight: 600; }
+    .cart-close { background: none; border: none; color: rgba(255,255,255,0.8); font-size: 1.5rem; cursor: pointer; }
+    .cart-close:hover { color: white; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem; }
+    .cart-empty { text-align: center; padding: 3rem 1rem; color: var(--gray); }
+    .cart-empty .empty-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .cart-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--light-gray); }
+    .cart-item-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-weight: 500; font-size: 0.92rem; color: var(--black); }
+    .cart-item-price { color: var(--green); font-size: 0.85rem; margin-top: 0.2rem; font-weight: 500; }
+    .cart-item-qty { display: flex; align-items: center; gap: 0.5rem; }
+    .qty-btn { width: 28px; height: 28px; border: 1px solid var(--light-gray); background: var(--off-white); cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; border-radius: 2px; transition: all 0.2s; }
+    .qty-btn:hover { background: var(--green); color: white; border-color: var(--green); }
+    .qty-num { font-size: 0.9rem; min-width: 20px; text-align: center; font-weight: 500; }
+    .cart-footer { padding: 1.5rem 2rem; border-top: 2px solid var(--light-gray); }
+    .cart-total { display: flex; justify-content: space-between; margin-bottom: 1.2rem; align-items: center; }
+    .cart-total span:first-child { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); font-weight: 500; }
+    .cart-total span:last-child { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--green); font-weight: 600; }
+    .checkout-btn { width: 100%; background: var(--green); color: var(--white); border: none; padding: 1rem; font-family: 'Inter', sans-serif; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-weight: 500; transition: background 0.3s; border-radius: 2px; }
+    .checkout-btn:hover { background: var(--green-mid); }
+
+    /* ── AWS ── */
+    .aws-section { background: var(--charcoal); }
+    .aws-section .section-label { color: var(--green-lt); }
+    .aws-section .section-title { color: var(--white); }
+    .aws-section .container > p { color: #aaa; line-height: 1.75; margin-bottom: 2rem; font-size: 0.95rem; }
+    .aws-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+    .aws-card { border: 1px solid rgba(255,255,255,0.08); padding: 1.8rem; border-radius: 4px; background: rgba(255,255,255,0.03); transition: border-color 0.3s, background 0.3s; }
+    .aws-card:hover { border-color: var(--green); background: rgba(58,125,68,0.08); }
+    .aws-card .aws-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .aws-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--green-lt); margin-bottom: 0.5rem; font-weight: 600; }
+    .aws-card p { font-size: 0.83rem; color: #999; margin: 0; line-height: 1.65; }
+
+    /* ── CONTACT ── */
+    .contact { background: var(--off-white); border-top: 1px solid var(--light-gray); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .contact-detail { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.3rem; }
+    .contact-detail .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .contact-detail p { font-size: 0.92rem; color: var(--gray); line-height: 1.6; }
+    .contact-detail strong { display: block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.25rem; font-weight: 600; }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-form input, .contact-form textarea { width: 100%; padding: 0.9rem 1rem; background: var(--white); border: 1px solid var(--light-gray); font-family: 'Inter', sans-serif; font-size: 0.92rem; color: var(--black); outline: none; transition: border-color 0.3s; border-radius: 2px; }
+    .contact-form input:focus, .contact-form textarea:focus { border-color: var(--green); }
+    .contact-form textarea { resize: vertical; min-height: 120px; }
+    .contact-form button { background: var(--green); color: var(--white); border: none; padding: 0.9rem 2rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; align-self: flex-start; border-radius: 2px; font-weight: 500; }
+    .contact-form button:hover { background: var(--green-mid); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--black); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    footer .logo { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 1.2rem; font-weight: 600; }
+    footer .logo span { color: var(--green-lt); }
+    footer p { font-size: 0.78rem; color: #666; }
+    .footer-badge { display: flex; align-items: center; gap: 0.5rem; background: rgba(58,125,68,0.15); border: 1px solid rgba(58,125,68,0.3); padding: 0.4rem 0.9rem; font-size: 0.72rem; color: var(--green-lt); border-radius: 2px; font-weight: 500; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: var(--white); padding: 0.8rem 1.8rem; font-size: 0.82rem; z-index: 400; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); white-space: nowrap; border-radius: 2px; font-weight: 500; box-shadow: 0 4px 20px rgba(58,125,68,0.3); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── NEWSLETTER ── */
+    .newsletter { background: var(--green); padding: 5rem 2rem; }
+    .newsletter-inner { max-width: 580px; margin: 0 auto; text-align: center; }
+    .newsletter .section-label { color: rgba(255,255,255,0.7); }
+    .newsletter h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem,4vw,2.6rem); color: var(--white); font-weight: 600; margin-bottom: 0.8rem; }
+    .newsletter p { color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem; }
+    .newsletter-form { display: flex; gap: 0; max-width: 460px; margin: 0 auto; }
+    .newsletter-form input {
+      flex: 1; padding: 0.9rem 1.2rem; border: none; outline: none;
+      font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--black);
+      background: var(--white); border-radius: 2px 0 0 2px;
+    }
+    .newsletter-form input::placeholder { color: var(--gray); }
+    .newsletter-form button {
+      background: var(--black); color: var(--white); border: none;
+      padding: 0.9rem 1.5rem; font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer; transition: background 0.3s;
+      border-radius: 0 2px 2px 0; white-space: nowrap;
+    }
+    .newsletter-form button:hover { background: var(--charcoal); }
+    .newsletter-note { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-top: 1rem; }
+
+    /* ── BACK TO TOP ── */
+    .back-to-top {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 150;
+      width: 44px; height: 44px; background: var(--green); color: var(--white);
+      border: none; border-radius: 2px; cursor: pointer; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(58,125,68,0.35);
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s, background 0.3s;
+      pointer-events: none;
+    }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .back-to-top:hover { background: var(--green-mid); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 4rem 2rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-visual { grid-template-columns: 1fr 1fr; }
+      .stat-card:first-child { grid-column: span 2; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-column: span 2; }
+      .map-wrapper { grid-template-columns: 1fr; }
+      .cart-sidebar { width: 100%; right: -100%; }
+      .reviews-summary { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <span class="empty-icon">🌿</span>
+      <p>Your cart is empty.<br>Add something delicious!</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">R0</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Place Order</button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-content">
+    <div class="lightbox-emoji" id="lightboxEmoji"></div>
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Freshly<span>Ground</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#location">Location</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="cart-btn" onclick="openCart()">
+    🛒 Order <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Now Serving — Braamfontein, JHB</div>
+    <h1>Coffee that<br>tastes like <em>home.</em></h1>
+    <p>FreshlyGround is your neighbourhood café — locally sourced beans, freshly baked pastries, and a warm space to slow down and connect.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-primary">View Our Menu</a>
+      <a href="#contact" class="btn-outline">Find Us</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-emoji">☕</div>
+    <div class="hero-badge">
+      <div class="num">4.9★</div>
+      <div class="lbl">248 Reviews</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <p class="section-label">Who We Are</p>
+        <h2 class="section-title">A beloved local café, now on the cloud.</h2>
+        <p>FreshlyGround has been at the heart of the community since 2010 — crafting exceptional coffee, handmade pastries, and a warm space for people to connect. We believe a great cup of coffee should be simple, honest, and extraordinary.</p>
+        <p>As we grow, we've partnered with Amazon Web Services to bring our café into the digital era — so you can browse our menu, place orders online, and enjoy the same warmth we put into every cup.</p>
+      </div>
+      <div class="about-visual fade-in">
+        <div class="stat-card"><div class="number">14+</div><div class="label">Years in the community</div></div>
+        <div class="stat-card"><div class="number">50+</div><div class="label">Menu items</div></div>
+        <div class="stat-card"><div class="number">100%</div><div class="label">Locally sourced beans</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="container">
+    <div class="menu-header">
+      <div>
+        <p class="section-label fade-in">What We Serve</p>
+        <h2 class="section-title fade-in">Our Menu</h2>
+      </div>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-item fade-in">
+        <div class="icon">☕</div><span class="price">R35</span>
+        <h3>Signature Espresso</h3>
+        <p class="desc">A bold, single-origin shot pulled to perfection. Rich crema, dark chocolate notes, with a smooth, lingering finish.</p>
+        <span class="menu-tag">Bestseller</span>
+        <button class="add-to-cart" onclick="addToCart(this,'Signature Espresso',35,'☕')">+ Add to Order</button>
+      </div>
+      <div class="menu-item fade-in">
+        <div class="icon">🥛</div><span class="price">R55</span>
+        <h3>Velvety Flat White</h3>
+        <p class="desc">Two ristretto shots topped with silky microfoam steamed milk. The perfect balance of strength and creaminess.</p>
+        <span class="menu-tag">Fan Favourite</span>
+        <button class="add-to-cart" onclick="addToCart(this,'Velvety Flat White',55,'🥛')">+ Add to Order</button>
+      </div>
+      <div class="menu-item fade-in">
+        <div class="icon">🍦</div><span class="price">R65</span>
+        <h3>Caramel Affogato</h3>
+        <p class="desc">A scoop of vanilla gelato drowned in a double espresso shot, finished with house-made salted caramel drizzle.</p>
+        <span class="menu-tag">Seasonal Special</span>
+        <button class="add-to-cart" onclick="addToCart(this,'Caramel Affogato',65,'🍦')">+ Add to Order</button>
+      </div>
+      <div class="menu-item fade-in">
+        <div class="icon">🥐</div><span class="price">R45</span>
+        <h3>Butter Croissant</h3>
+        <p class="desc">Freshly baked each morning — flaky, buttery layers that shatter perfectly. Best enjoyed warm with a flat white.</p>
+        <span class="menu-tag">Baked Fresh Daily</span>
+        <button class="add-to-cart" onclick="addToCart(this,'Butter Croissant',45,'🥐')">+ Add to Order</button>
+      </div>
+      <div class="menu-item fade-in">
+        <div class="icon">🥗</div><span class="price">R95</span>
+        <h3>Avocado Toast</h3>
+        <p class="desc">Sourdough toast topped with smashed avo, dukkah, cherry tomatoes, micro herbs, and a poached free-range egg.</p>
+        <span class="menu-tag">All-day Breakfast</span>
+        <button class="add-to-cart" onclick="addToCart(this,'Avocado Toast',95,'🥗')">+ Add to Order</button>
+      </div>
+      <div class="menu-item fade-in">
+        <div class="icon">🍵</div><span class="price">R48</span>
+        <h3>Matcha Latte</h3>
+        <p class="desc">Ceremonial-grade Japanese matcha whisked with oat milk. Earthy, creamy, and naturally energising without the jitters.</p>
+        <span class="menu-tag">Non-Coffee</span>
+        <button class="add-to-cart" onclick="addToCart(this,'Matcha Latte',48,'🍵')">+ Add to Order</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <p class="section-label fade-in">Our Space &amp; Craft</p>
+    <h2 class="section-title fade-in">Gallery</h2>
+    <div class="gallery-grid fade-in">
+      <div class="gallery-item" onclick="openLightbox('☕','The perfect espresso pull — our signature single-origin roast, crafted daily.')">
+        <div class="gallery-thumb" data-caption="The Art of Espresso">☕</div>
+        <div class="overlay"><span>🔍</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('🏡','Our warm, welcoming interior — designed for community, comfort and connection.')">
+        <div class="gallery-thumb" data-caption="Our Interior">🏡</div>
+        <div class="overlay"><span>🔍</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('🥐','Freshly baked every morning before 6am — never frozen, always perfectly flaky.')">
+        <div class="gallery-thumb" data-caption="Fresh Bakes Daily">🥐</div>
+        <div class="overlay"><span>🔍</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('🌱','Our beans are ethically sourced from local South African farms we visit personally.')">
+        <div class="gallery-thumb" data-caption="Locally Sourced Beans">🌱</div>
+        <div class="overlay"><span>🔍</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('👨‍🍳','Our baristas train for 3 months before pulling their first commercial shot.')">
+        <div class="gallery-thumb" data-caption="Our Baristas">👨‍🍳</div>
+        <div class="overlay"><span>🔍</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="container">
+    <p class="section-label fade-in">What People Say</p>
+    <h2 class="section-title fade-in">Customer Reviews</h2>
+    <div class="reviews-grid">
+      <div class="review-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Hands down the best flat white in Joburg. The beans are incredible and the baristas actually care about their craft. This is my daily stop, no question."</p>
+        <div class="reviewer"><div class="reviewer-avatar">👩</div><div><div class="reviewer-name">Thandi Nkosi</div><div class="reviewer-date">January 2025</div></div></div>
+      </div>
+      <div class="review-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"The avocado toast is a whole experience. Fresh, beautifully plated, and the sourdough is baked in-house. Paired with the matcha latte — absolute perfection."</p>
+        <div class="reviewer"><div class="reviewer-avatar">👨</div><div><div class="reviewer-name">Sipho Dlamini</div><div class="reviewer-date">February 2025</div></div></div>
+      </div>
+      <div class="review-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Love that FreshlyGround is now online! Checked the menu before coming and the site is so easy to use. The café itself has such a warm, cosy vibe."</p>
+        <div class="reviewer"><div class="reviewer-avatar">👩</div><div><div class="reviewer-name">Aisha Patel</div><div class="reviewer-date">February 2025</div></div></div>
+      </div>
+      <div class="review-card fade-in">
+        <div class="stars">★★★★☆</div>
+        <p class="review-text">"The caramel affogato is dangerously good. Rich espresso, creamy gelato, salted caramel drizzle — I dream about it. Staff are always friendly and welcoming."</p>
+        <div class="reviewer"><div class="reviewer-avatar">👨</div><div><div class="reviewer-name">Luca van der Berg</div><div class="reviewer-date">March 2025</div></div></div>
+      </div>
+      <div class="review-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"As someone who doesn't drink coffee, the matcha latte is everything. Earthy, creamy, not too sweet — quality ceremonial-grade matcha you can actually taste."</p>
+        <div class="reviewer"><div class="reviewer-avatar">👩</div><div><div class="reviewer-name">Nomvula Zulu</div><div class="reviewer-date">March 2025</div></div></div>
+      </div>
+      <div class="review-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Been coming here since 2012. Watched this place grow from a tiny corner café to this. Never lost the soul. Same amazing espresso, same warm smiles. Proud regular."</p>
+        <div class="reviewer"><div class="reviewer-avatar">👴</div><div><div class="reviewer-name">Mr. Rademeyer</div><div class="reviewer-date">January 2025</div></div></div>
+      </div>
+    </div>
+    <div class="reviews-summary fade-in">
+      <div class="summary-score">
+        <div class="big">4.9</div>
+        <div class="stars">★★★★★</div>
+        <p>248 reviews</p>
+      </div>
+      <div class="summary-bars">
+        <div class="bar-row"><span>5★</span><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div><span style="color:var(--green);font-weight:500">91%</span></div>
+        <div class="bar-row"><span>4★</span><div class="bar-track"><div class="bar-fill" style="width:7%"></div></div><span style="color:var(--green);font-weight:500">7%</span></div>
+        <div class="bar-row"><span>3★</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><span style="color:var(--green);font-weight:500">2%</span></div>
+        <div class="bar-row"><span>2★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span style="color:var(--green);font-weight:500">0%</span></div>
+        <div class="bar-row"><span>1★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span style="color:var(--green);font-weight:500">0%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section" id="location">
+  <div class="map-wrapper">
+    <div class="map-info fade-in">
+      <p class="section-label">Find Us</p>
+      <h2 class="section-title">Hours &amp; Location</h2>
+      <ul class="hours-list" id="hoursList">
+        <li><span>Monday</span><span>06:30 – 18:00</span></li>
+        <li><span>Tuesday</span><span>06:30 – 18:00</span></li>
+        <li><span>Wednesday</span><span>06:30 – 18:00</span></li>
+        <li><span>Thursday</span><span>06:30 – 18:00</span></li>
+        <li><span>Friday</span><span>06:30 – 18:00</span></li>
+        <li><span>Saturday</span><span>07:00 – 16:00</span></li>
+        <li><span>Sunday</span><span>07:00 – 14:00</span></li>
+      </ul>
+    </div>
+    <div class="map-embed">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14321.24!2d28.0436!3d-26.1929!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e950c68e7f9b4e5%3A0x3c74e0c75b7c4f70!2sBraamfontein%2C+Johannesburg!5e0!3m2!1sen!2sza!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="map-overlay-badge">📍 12 Bean Street, Braamfontein, JHB</div>
+    </div>
+  </div>
+</section>
+
+<!-- AWS -->
+<section class="aws-section" id="aws">
+  <div class="container">
+    <p class="section-label fade-in">Powered by Technology</p>
+    <h2 class="section-title fade-in">Our Cloud Infrastructure</h2>
+    <p class="fade-in">FreshlyGround has migrated to <strong style="color:var(--green-lt)">Amazon Web Services (AWS)</strong> to deliver a faster, more reliable, and more secure digital experience. This website is hosted on Amazon S3 — the same infrastructure that powers the world's largest companies.</p>
+    <div class="aws-cards">
+      <div class="aws-card fade-in"><div class="aws-icon">🪣</div><h4>Amazon S3</h4><p>Hosts this static website. Scalable, 99.999999999% durable, and cost-effective — no web server required.</p></div>
+      <div class="aws-card fade-in"><div class="aws-icon">🔒</div><h4>AWS IAM</h4><p>Controls who can access our AWS resources, keeping customer data and café systems secure.</p></div>
+      <div class="aws-card fade-in"><div class="aws-icon">🖥️</div><h4>Amazon EC2</h4><p>Powers backend applications with scalable compute capacity that grows with the café.</p></div>
+      <div class="aws-card fade-in"><div class="aws-icon">📊</div><h4>Amazon CloudWatch</h4><p>Real-time monitoring and logging with automatic alerts if anything needs attention.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <p class="section-label fade-in">Get In Touch</p>
+    <h2 class="section-title fade-in">Visit or Contact Us</h2>
+    <div class="contact-grid">
+      <div class="contact-info fade-in">
+        <div class="contact-detail"><span class="icon">📍</span><p><strong>Address</strong>12 Bean Street, Braamfontein<br>Johannesburg, 2001</p></div>
+        <div class="contact-detail"><span class="icon">📞</span><p><strong>Phone</strong>+27 11 123 4567</p></div>
+        <div class="contact-detail"><span class="icon">✉️</span><p><strong>Email</strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f79f929b9b98b7918592849f9b8e908598829993d99498d98d96">[email&#160;protected]</a></p></div>
+        <div class="contact-detail"><span class="icon">🕐</span><p><strong>Hours</strong>Mon – Fri: 6:30am – 6pm<br>Sat – Sun: 7am – 4pm</p></div>
+      </div>
+      <form class="contact-form fade-in" onsubmit="handleSubmit(event)">
+        <input type="text" placeholder="Your name" required />
+        <input type="email" placeholder="Email address" required />
+        <textarea placeholder="Your message..."></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="newsletter-inner fade-in">
+    <p class="section-label">Stay in the Loop</p>
+    <h2>Get our weekly specials ☕</h2>
+    <p>Subscribe for exclusive menu drops, seasonal drinks, and café news — straight to your inbox. No spam, ever.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Enter your email address" id="newsletterEmail" />
+      <button onclick="subscribeNewsletter()">Subscribe</button>
+    </div>
+    <p class="newsletter-note">🔒 We respect your privacy. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Freshly<span>Ground</span> ☕</div>
+  <p>© 2025 FreshlyGround Café. All rights reserved.</p>
+  <div class="footer-badge">☁️ Hosted on AWS S3</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // FADE IN
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // HIGHLIGHT TODAY
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const today = days[new Date().getDay()];
+  document.querySelectorAll('#hoursList li').forEach(li => {
+    if (li.querySelector('span').textContent === today) li.classList.add('today');
+  });
+
+  // CART
+  let cart = [];
+  function openCart() { document.getElementById('cartSidebar').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); }
+  function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); }
+  function addToCart(btn, name, price, icon) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty++; } else { cart.push({ name, price, icon, qty: 1 }); }
+    btn.textContent = '✓ Added!'; btn.classList.add('added');
+    setTimeout(() => { btn.textContent = '+ Add to Order'; btn.classList.remove('added'); }, 1500);
+    renderCart(); showToast(icon + ' ' + name + ' added!');
+  }
+  function renderCart() {
+    const el = document.getElementById('cartItems');
+    document.getElementById('cartCount').textContent = cart.reduce((s,i) => s + i.qty, 0);
+    if (cart.length === 0) { el.innerHTML = '<div class="cart-empty"><span class="empty-icon">🌿</span><p>Your cart is empty.<br>Add something delicious!</p></div>'; document.getElementById('cartTotal').textContent = 'R0'; return; }
+    el.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-icon">${item.icon}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">R${item.price} each</div></div><div class="cart-item-qty"><button class="qty-btn" onclick="changeQty(${i},-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div>`).join('');
+    document.getElementById('cartTotal').textContent = 'R' + cart.reduce((s,i) => s + i.price * i.qty, 0);
+  }
+  function changeQty(index, delta) { cart[index].qty += delta; if (cart[index].qty <= 0) cart.splice(index, 1); renderCart(); }
+  function checkout() {
+    if (cart.length === 0) { showToast('Your cart is empty!'); return; }
+    const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+    cart = []; renderCart(); closeCart(); showToast('✓ Order placed! Total: R' + total + '. See you soon!');
+  }
+
+  // LIGHTBOX
+  function openLightbox(emoji, caption) { document.getElementById('lightboxEmoji').textContent = emoji; document.getElementById('lightboxCaption').textContent = caption; document.getElementById('lightbox').classList.add('open'); }
+  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+  document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) closeLightbox(); });
+
+  // TOAST
+  function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+
+  // CONTACT
+  function handleSubmit(e) { e.preventDefault(); const btn = e.targe
