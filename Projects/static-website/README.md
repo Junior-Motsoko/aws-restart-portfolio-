@@ -12,6 +12,11 @@ graph LR
         A[User in Cape Town] --> B(Web Browser)
     end
 
+graph LR
+    subgraph Client_Side [User Environment]
+        A[User in Cape Town] --> B(Web Browser)
+    end
+
     subgraph Internet_Layer [The Network]
         B --> C((Public Internet))
     end
@@ -30,6 +35,7 @@ graph LR
     style E fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff
     style D fill:#D05C5C,stroke:#232F3E,color:#fff
     style AWS_Cloud fill:#f9f9f9,stroke:#232F3E,stroke-dasharray: 5 5
+    
 
 ## 🛠️ Tech Stack & Skills
 
@@ -58,5 +64,6 @@ graph LR
 ## 🔗 Live Demo
 
 > **Live Website:** [Click here to view the FreshlyGround Cafe](http://freshlyground-cafe-juniorlogic.s3-website.af-south-1.amazonaws.com)
+
 
 
