@@ -631,7 +631,7 @@
       <div class="contact-info fade-in">
         <div class="contact-detail"><span class="icon">📍</span><p><strong>Address</strong>12 Bean Street, Braamfontein<br>Johannesburg, 2001</p></div>
         <div class="contact-detail"><span class="icon">📞</span><p><strong>Phone</strong>+27 11 123 4567</p></div>
-        <div class="contact-detail"><span class="icon">✉️</span><p><strong>Email</strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f79f929b9b98b7918592849f9b8e908598829993d99498d98d96">[email&#160;protected]</a></p></div>
+        <div class="contact-detail"><span class="icon">✉️</span><p><strong>Email</strong>hello@freshlyground.co.za</p></div>
         <div class="contact-detail"><span class="icon">🕐</span><p><strong>Hours</strong>Mon – Fri: 6:30am – 6pm<br>Sat – Sun: 7am – 4pm</p></div>
       </div>
       <form class="contact-form fade-in" onsubmit="handleSubmit(event)">
@@ -668,7 +668,7 @@
   <div class="footer-badge">☁️ Hosted on AWS S3</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // FADE IN
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -715,5 +715,26 @@
   // TOAST
   function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
-  // CONTACT
-  function handleSubmit(e) { e.preventDefault(); const btn = e.targe
+  // CONTACT FORM
+  function handleSubmit(e) {
+    e.preventDefault();
+    showToast('✓ Message sent! We\'ll be in touch soon.');
+    e.target.reset();
+  }
+
+  // NEWSLETTER
+  function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value;
+    if (!email) { showToast('Please enter your email address.'); return; }
+    showToast('✓ Subscribed! Welcome to the FreshlyGround family.');
+    document.getElementById('newsletterEmail').value = '';
+  }
+
+  // BACK TO TOP
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+</body>
+</html>
