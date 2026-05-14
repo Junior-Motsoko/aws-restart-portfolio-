@@ -1,48 +1,843 @@
+/*
+portfolio.css
+───────────────────────────────────────────────────────────────
+All styles for the AWS re/Start Portfolio markdown viewer.
+Structure:
+1. Reset & CSS variables
+2. Layout (app shell, topbar, sidebar, main)
+3. Navigation items (sections, subsections, leaves)
+4. Content area & markdown typography
+5. Modals (markdown preview, PDF preview)
+6. Component styles (meta cards, badges, buttons)
+7. Scrollbar & responsive
+*/
+
+/* ───────────────────────────────────────────────────────── */
+/*  1. Reset & CSS Variables                                  */
+/* ───────────────────────────────────────────────────────── */
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Colors */
+  --bg: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --muted: #8b949e;
+  --green: #39d353;
+  --blue: #58a6ff;
+  --orange: #ffa657;
+  --red: #f85149;
+
+  /* Spacing */
+  --sidebar-width: 280px;
+  --topbar-height: 56px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow: hidden;
 }
 
-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem 0;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* ───────────────────────────────────────────────────────── */
+/*  2. Layout                                                  */
+/* ───────────────────────────────────────────────────────── */
+
+#topbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-height);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  z-index: 100;
 }
 
-header h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
+#topbar-title {
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+  margin-right: 40px;
 }
 
-main {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 2rem;
+#hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
 }
 
-section {
-    background: white;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s;
 }
 
-h2 {
-    color: #667eea;
-    margin-bottom: 1rem;
+#app {
+  display: flex;
+  height: 100vh;
 }
 
-p {
-    margin-bottom: 1rem;
+/* Sidebar */
+#sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#sidebar-header {
+  padding: var(--spacing-xl);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+}
+
+#sidebar-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: var(--spacing-xs);
+}
+
+#sidebar-header p {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+#nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md) 0;
+}
+
+/* Main content */
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#content-header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+#breadcrumb {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+#breadcrumb-text {
+  color: var(--text);
+}
+
+#content-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-xl);
+}
+
+#content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ───────────────────────────────────────────────────────── */
+/*  3. Navigation Items                                        */
+/* ───────────────────────────────────────────────────────── */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: var(--bg-tertiary);
+  color: var(--green);
+}
+
+.nav-item.active {
+  background: var(--bg-tertiary);
+  color: var(--green);
+  border-left-color: var(--green);
+  font-weight: 600;
+}
+
+.nav-item .icon {
+  margin-right: var(--spacing-sm);
+  font-size: 16px;
+}
+
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--spacing-sm) 0;
+}
+
+/* Nav sections */
+.nav-section {
+  margin-bottom: var(--spacing-sm);
+}
+
+.nav-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.nav-section-header:hover {
+  color: var(--text);
+  background: var(--bg-tertiary);
+}
+
+.nav-section-header .chevron {
+  font-size: 10px;
+  transition: transform 0.3s;
+}
+
+.nav-section.open .chevron {
+  transform: rotate(90deg);
+}
+
+.nav-section-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.nav-section.open .nav-section-body {
+  max-height: 2000px;
+}
+
+/* Nav subsections */
+.nav-sub-section {
+  margin-left: var(--spacing-lg);
+}
+
+.nav-sub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.nav-sub-header:hover {
+  color: var(--text);
+  background: var(--bg-tertiary);
+}
+
+.nav-sub-header .chevron {
+  font-size: 10px;
+  transition: transform 0.3s;
+}
+
+.nav-sub-section.open .chevron {
+  transform: rotate(90deg);
+}
+
+.nav-sub-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.nav-sub-section.open .nav-sub-body {
+  max-height: 1000px;
+}
+
+/* Nav leaf (item with instruction toggle) */
+.nav-leaf {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding-left: var(--spacing-lg);
+}
+
+.nav-leaf .nav-item {
+  flex: 1;
+  padding-left: calc(var(--spacing-lg) + 20px);
+}
+
+.instr-toggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  font-size: 14px;
+  transition: all 0.2s;
+  border-radius: 4px;
+  margin-right: var(--spacing-sm);
+}
+
+.instr-toggle:hover {
+  background: var(--bg-tertiary);
+  color: var(--orange);
+}
+
+.instr-toggle.active {
+  color: var(--orange);
+}
+
+/* ───────────────────────────────────────────────────────── */
+/*  4. Content Area & Markdown Typography                     */
+/* ───────────────────────────────────────────────────────── */
+
+.state-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--muted);
+  min-height: 200px;
+}
+
+.state-msg .icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+}
+
+.state-msg p {
+  font-size: 14px;
+}
+
+/* Markdown content */
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+#content h1 {
+  font-size: 32px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+
+#content h2 {
+  font-size: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+
+#content h3 {
+  font-size: 20px;
+}
+
+#content h4 {
+  font-size: 16px;
+}
+
+#content h5,
+#content h6 {
+  font-size: 14px;
+}
+
+#content p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+
+#content a {
+  color: var(--blue);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+#content a:hover {
+  text-decoration: underline;
+}
+
+#content ul,
+#content ol {
+  margin-left: 2em;
+  margin-bottom: 1em;
+}
+
+#content li {
+  margin-bottom: 0.5em;
+}
+
+#content code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--orange);
+}
+
+#content pre {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--spacing-lg);
+  margin-bottom: 1em;
+  overflow-x: auto;
+}
+
+#content pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#content blockquote {
+  border-left: 4px solid var(--border);
+  padding-left: var(--spacing-lg);
+  margin: 1em 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+  font-size: 14px;
+}
+
+#content th,
+#content td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+#content th {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+}
+
+#content tr:hover {
+  background: var(--bg-tertiary);
+}
+
+#content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1em 0;
+}
+
+#content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2em 0;
+}
+
+/* ───────────────────────────────────────────────────────── */
+/*  5. Modals                                                  */
+/* ───────────────────────────────────────────────────────── */
+
+#md-modal,
+#pdf-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s;
+}
+
+#md-modal.open,
+#pdf-modal.open {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#md-modal-inner,
+#pdf-modal-inner {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+#md-modal-header,
+#pdf-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+#md-modal-title,
+#pdf-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+#md-modal-close,
+#pdf-modal-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 32px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+#md-modal-close:hover,
+#pdf-modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--red);
+}
+
+#md-modal-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-xl);
+}
+
+#md-modal-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Apply same markdown styles to modal content */
+#md-modal-content h1,
+#md-modal-content h2,
+#md-modal-content h3,
+#md-modal-content h4,
+#md-modal-content h5,
+#md-modal-content h6 {
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+#md-modal-content h1 {
+  font-size: 32px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+
+#md-modal-content h2 {
+  font-size: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+
+#md-modal-content p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+
+#md-modal-content code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--orange);
+}
+
+#md-modal-content pre {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--spacing-lg);
+  margin-bottom: 1em;
+  overflow-x: auto;
+}
+
+#md-modal-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+#md-modal-content ul,
+#md-modal-content ol {
+  margin-left: 2em;
+  margin-bottom: 1em;
+}
+
+#md-modal-content img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 1em 0;
+}
+
+#pdf-frame {
+  flex: 1;
+  border: none;
+  background: white;
+}
+
+/* ───────────────────────────────────────────────────────── */
+/*  6. Component Styles                                        */
+/* ───────────────────────────────────────────────────────── */
+
+.meta-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.meta-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: var(--spacing-sm);
+}
+
+.meta-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
+}
+
+.meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.meta-tag {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  padding: 4px var(--spacing-md);
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+.gh-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 12px;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.gh-badge-label {
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.gh-badge-value {
+  padding: 4px 8px;
+  background: var(--green);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.gh-badge-value.loading {
+  background: var(--bg-tertiary);
+  color: var(--muted);
+}
+
+.pdf-btn,
+.md-link-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--blue);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: 4px;
+}
+
+.pdf-btn:hover,
+.md-link-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.2);
+}
+
+/* ───────────────────────────────────────────────────────── */
+/*  7. Scrollbar & Responsive                                  */
+/* ───────────────────────────────────────────────────────── */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #topbar {
+    display: flex;
+  }
+
+  #app {
+    padding-top: var(--topbar-height);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+    z-index: 99;
+  }
+
+  #sidebar.open {
+    transform: translateX(0);
+  }
+
+  #main {
+    width: 100%;
+  }
+
+  #content-wrap {
+    padding: var(--spacing-lg);
+  }
+
+  #md-modal-inner,
+  #pdf-modal-inner {
+    width: 95%;
+    height: 90vh;
+  }
+
+  #md-modal-wrap {
+    padding: var(--spacing-lg);
+  }
 }

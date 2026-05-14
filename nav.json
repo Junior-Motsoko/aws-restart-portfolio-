@@ -1,27 +1,127 @@
 {
-  "navigation": [
+  "home": "README.md",
+  "sections": [
     {
-      "title": "Labs",
-      "items": [
-        { "name": "Compute", "path": "Labs/Compute" },
-        { "name": "Databases", "path": "Labs/Databases" },
-        { "name": "Linux", "path": "Labs/Linux" },
-        { "name": "Networking", "path": "Labs/Networking" },
-        { "name": "Security", "path": "Labs/Security" },
-        { "name": "Storage", "path": "Labs/Storage" }
+      "id": "sec-labs",
+      "label": "Labs",
+      "icon": "🧪",
+      "overview": "Labs/README.md",
+      "children": [
+        {
+          "id": "sec-labs-compute",
+          "label": "Compute",
+          "icon": "🖥️",
+          "overview": "Labs/Compute/README.md",
+          "entries": [
+            {
+              "label": "EC2 Introduction",
+              "path": "Labs/Compute/EC2-Introduction"
+            }
+          ]
+        },
+        {
+          "id": "sec-labs-databases",
+          "label": "Databases",
+          "icon": "📊",
+          "entries": [
+            {
+              "label": "Overview",
+              "path": "Labs/Databases"
+            }
+          ]
+        },
+        {
+          "id": "sec-labs-linux",
+          "label": "Linux",
+          "icon": "🐧",
+          "entries": [
+            {
+              "label": "Overview",
+              "path": "Labs/Linux"
+            }
+          ]
+        },
+        {
+          "id": "sec-labs-networking",
+          "label": "Networking",
+          "icon": "🌐",
+          "entries": [
+            {
+              "label": "Overview",
+              "path": "Labs/Networking"
+            }
+          ]
+        },
+        {
+          "id": "sec-labs-security",
+          "label": "Security",
+          "icon": "🔒",
+          "entries": [
+            {
+              "label": "Overview",
+              "path": "Labs/Security"
+            }
+          ]
+        },
+        {
+          "id": "sec-labs-storage",
+          "label": "Storage",
+          "icon": "💾",
+          "entries": [
+            {
+              "label": "Overview",
+              "path": "Labs/Storage"
+            }
+          ]
+        }
       ]
     },
     {
-      "title": "Projects",
-      "items": [
-        { "name": "3D E-Commerce Architecture", "path": "Projects/design_3d_e_commerce_architecture" },
-        { "name": "Static Website", "path": "Projects/static_website" }
+      "id": "sec-projects",
+      "label": "Projects",
+      "icon": "🚀",
+      "overview": "Projects/README.md",
+      "entries": [
+        {
+          "label": "3D E-Commerce Architecture",
+          "path": "Projects/design_3d_e_commerce_architecture"
+        },
+        {
+          "label": "Static Website",
+          "path": "Projects/static_website"
+        }
       ]
     },
     {
-      "title": "Certifications & Badges",
-      "items": [
-        { "name": "Simu-Learn", "path": "Certs-Badges/Simu-Learn" }
+      "id": "sec-certs",
+      "label": "Certifications & Badges",
+      "icon": "🎓",
+      "overview": "Certs-Badges/README.md",
+      "children": [
+        {
+          "id": "sec-certs-simulearn",
+          "label": "Simu-Learn",
+          "icon": "📚",
+          "overview": "Certs-Badges/Simu-Learn/README.md",
+          "entries": [
+            {
+              "label": "Core Security Concepts",
+              "path": "Certs-Badges/Simu-Learn/core_security_concepts"
+            },
+            {
+              "label": "Databases in Practice",
+              "path": "Certs-Badges/Simu-Learn/databases_in_practice"
+            },
+            {
+              "label": "File Systems in the Cloud",
+              "path": "Certs-Badges/Simu-Learn/file_systems_in_the_cloud"
+            },
+            {
+              "label": "Networking Concepts",
+              "path": "Certs-Badges/Simu-Learn/networking_concepts"
+            }
+          ]
+        }
       ]
     }
   ]

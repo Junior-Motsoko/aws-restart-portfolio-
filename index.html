@@ -1,21 +1,98 @@
+<!--
+index.html
+───────────────────────────────────────────────────────────────
+Entry point for the AWS re/Start Portfolio markdown viewer.
+Structure:
+- <head> : CDN dependencies (marked.js, highlight.js) + local assets
+- #topbar : Mobile navigation bar with hamburger toggle
+- #sidebar : Collapsible navigation tree mirroring README.md structure
+- #main : Content area where markdown files are rendered
+- #md-modal : Popup modal for Instructions / Architecture markdown previews
+- #pdf-modal: Popup modal for PDF certificate previews
+Dependencies:
+- assets/portfolio.css (all styles)
+- assets/portfolio.js (all logic)
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS re/Start Portfolio</title>
-    <link rel="stylesheet" href="assets/portfolio.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS re/Start Portfolio</title>
+
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- Portfolio styles -->
+  <link rel="stylesheet" href="assets/portfolio.css" />
+
 </head>
 <body>
-    <header>
-        <h1>AWS re/Start Portfolio</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Welcome</h2>
-            <p>This is my AWS re/Start Portfolio showcasing my cloud computing journey.</p>
-        </section>
-    </main>
-    <script src="assets/portfolio.js"></script>
+
+<!-- Mobile topbar -->
+<div id="topbar">
+  <button id="hamburger" aria-label="Toggle sidebar">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="topbar-title">AWS re/Start Portfolio</div>
+</div>
+
+<div id="app">
+
+  <!-- ── Sidebar ───────────────────────────────────────────── -->
+  <aside id="sidebar">
+    <div id="sidebar-header">
+      <h1>☁️ AWS re/Start</h1>
+      <p>Portfolio Navigator</p>
+    </div>
+
+    <!-- Nav is built dynamically from nav.json by portfolio.js -->
+    <nav id="nav"></nav>
+  </aside><!-- /sidebar -->
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <div id="main">
+    <div id="content-header">
+      <div id="breadcrumb">📍 <span id="breadcrumb-text">Home</span></div>
+    </div>
+    <div id="content-wrap">
+      <div id="content">
+        <div class="state-msg">
+          <div class="icon">⏳</div>
+          <p>Loading…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ── Markdown Preview Modal ─────────────────────────────── -->
+<div id="md-modal" role="dialog" aria-modal="true" aria-label="Markdown Preview">
+  <div id="md-modal-inner">
+    <div id="md-modal-header">
+      <span id="md-modal-title">Instructions</span>
+      <button id="md-modal-close" onclick="closeMdModal()" aria-label="Close">&times;</button>
+    </div>
+    <div id="md-modal-wrap">
+      <div id="md-modal-content"></div>
+    </div>
+  </div>
+</div>
+<div id="pdf-modal" role="dialog" aria-modal="true" aria-label="PDF Preview">
+  <div id="pdf-modal-inner">
+    <div id="pdf-modal-header">
+      <span id="pdf-modal-title">Certificate Preview</span>
+      <button id="pdf-modal-close" onclick="closePdf()" aria-label="Close">&times;</button>
+    </div>
+    <iframe id="pdf-frame" src="" title="PDF Preview"></iframe>
+  </div>
+</div>
+
+<script src="assets/portfolio.js"></script>
 </body>
 </html>
