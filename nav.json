@@ -1,0 +1,28 @@
+{
+  "navigation": [
+    {
+      "title": "Labs",
+      "items": [
+        { "name": "Compute", "path": "Labs/Compute" },
+        { "name": "Databases", "path": "Labs/Databases" },
+        { "name": "Linux", "path": "Labs/Linux" },
+        { "name": "Networking", "path": "Labs/Networking" },
+        { "name": "Security", "path": "Labs/Security" },
+        { "name": "Storage", "path": "Labs/Storage" }
+      ]
+    },
+    {
+      "title": "Projects",
+      "items": [
+        { "name": "3D E-Commerce Architecture", "path": "Projects/design_3d_e_commerce_architecture" },
+        { "name": "Static Website", "path": "Projects/static_website" }
+      ]
+    },
+    {
+      "title": "Certifications & Badges",
+      "items": [
+        { "name": "Simu-Learn", "path": "Certs-Badges/Simu-Learn" }
+      ]
+    }
+  ]
+}
