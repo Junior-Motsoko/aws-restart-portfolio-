@@ -30,9 +30,9 @@ Structure:
   --border: #30363d;
   --text: #c9d1d9;
   --muted: #8b949e;
-  --green: #39d353;
+  --orange: #ff9900;
   --blue: #58a6ff;
-  --orange: #ffa657;
+  --orange-light: #ffa657;
   --red: #f85149;
 
   /* Spacing */
@@ -127,7 +127,7 @@ body {
 #sidebar-header h1 {
   font-size: 20px;
   font-weight: 700;
-  color: var(--green);
+  color: var(--orange);
   margin-bottom: var(--spacing-xs);
 }
 
@@ -197,13 +197,13 @@ body {
 
 .nav-item:hover {
   background: var(--bg-tertiary);
-  color: var(--green);
+  color: var(--orange);
 }
 
 .nav-item.active {
   background: var(--bg-tertiary);
-  color: var(--green);
-  border-left-color: var(--green);
+  color: var(--orange);
+  border-left-color: var(--orange);
   font-weight: 600;
 }
 
@@ -331,11 +331,11 @@ body {
 
 .instr-toggle:hover {
   background: var(--bg-tertiary);
-  color: var(--orange);
+  color: var(--orange-light);
 }
 
 .instr-toggle.active {
-  color: var(--orange);
+  color: var(--orange-light);
 }
 
 /* ───────────────────────────────────────────────────────── */
@@ -432,7 +432,7 @@ body {
   border-radius: 4px;
   font-family: var(--font-mono);
   font-size: 0.9em;
-  color: var(--orange);
+  color: var(--orange-light);
 }
 
 #content pre {
@@ -568,7 +568,7 @@ body {
 #pdf-modal-title {
   font-size: 18px;
   font-weight: 600;
-  color: var(--green);
+  color: var(--orange);
 }
 
 #md-modal-close,
@@ -642,7 +642,7 @@ body {
   border-radius: 4px;
   font-family: var(--font-mono);
   font-size: 0.9em;
-  color: var(--orange);
+  color: var(--orange-light);
 }
 
 #md-modal-content pre {
@@ -693,7 +693,7 @@ body {
 .meta-title {
   font-size: 24px;
   font-weight: 700;
-  color: var(--green);
+  color: var(--orange);
   margin-bottom: var(--spacing-sm);
 }
 
@@ -741,7 +741,7 @@ body {
 
 .gh-badge-value {
   padding: 4px 8px;
-  background: var(--green);
+  background: var(--orange);
   color: var(--bg);
   font-weight: 600;
 }
