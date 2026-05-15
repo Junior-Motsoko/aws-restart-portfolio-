@@ -19,11 +19,14 @@ Features:
 // ═══════════════════════════════════════════════════════════
 
 function parseFrontMatter(raw) {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-  if (!match) return { meta: {}, body: raw };
+  // Normalize line endings to \n for consistent parsing
+  const normalized = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n/);
+  if (!match) return { meta: {}, body: normalized };
 
   const metaRaw = match[1];
-  const body = raw.slice(match[0].length);
+  const body = normalized.slice(match[0].length).trim();
   const meta = {};
 
   metaRaw.split('\n').forEach(line => {
@@ -61,9 +64,20 @@ function buildMetaCard(meta) {
 // ═══════════════════════════════════════════════════════════
 
 function stripNavigation(body) {
-  return body
-    .replace(/^##[^\n]*Navigation[^\n]*\n[\s\S]*?\n---/m, '')
-    .replace(/^[^\n]*img\.shields\.io[^\n]*$/gm, '');
+  // Only strip if there's actually a Navigation section followed by ---
+  // This prevents accidentally removing content
+  let result = body;
+
+  // Remove navigation sections that end with ---
+  const navMatch = body.match(/^##\s+Navigation[\s\S]*?\n---\n/m);
+  if (navMatch) {
+    result = result.replace(navMatch[0], '');
+  }
+
+  // Remove shield.io badge lines
+  result = result.replace(/^[^\n]*img\.shields\.io[^\n]*$/gm, '');
+
+  return result;
 }
 
 // ═══════════════════════════════════════════════════════════
